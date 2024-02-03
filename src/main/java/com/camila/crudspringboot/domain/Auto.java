@@ -14,21 +14,21 @@ import lombok.*;
 public class Auto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
-    private String makeBrand;
+    private String brand;
 
-    @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
     private Integer price_in_cents;
 
+    private Boolean active;
+
     public Auto(AutoDTO autoDTO) {
-        this.makeBrand = makeBrand;
-        this.model = model;
-        this.price_in_cents = price_in_cents;
+        this.brand = autoDTO.brand();
+        this.model = autoDTO.model();
+        this.price_in_cents = autoDTO.price_in_cents();
+        this.active = true;
     }
 }

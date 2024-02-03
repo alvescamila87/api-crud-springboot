@@ -21,7 +21,7 @@ public class AutoController {
 
     @GetMapping
     public ResponseEntity searchAllAuto() {
-        var allAuto = autoRepository.findAll();
+        var allAuto = autoRepository.findAllByActiveTrue();
         return ResponseEntity.ok(allAuto);
     }
 
@@ -38,18 +38,24 @@ public class AutoController {
         Optional<Auto> optionalAuto = autoRepository.findById(autoDTO.id());
 
         if (optionalAuto.isPresent()) {
-            Auto auto = optionalAuto.get();
-            auto.setBrand(autoDTO.brand());
-            auto.setModel(autoDTO.model());
-            auto.setPrice_in_cents(autoDTO.price_in_cents());
-            return ResponseEntity.ok(auto);
+            Auto updatingAuto = optionalAuto.get();
+            updatingAuto.setBrand(autoDTO.brand());
+            updatingAuto.setModel(autoDTO.model());
+            updatingAuto.setPrice_in_cents(autoDTO.price_in_cents());
+            return ResponseEntity.ok(updatingAuto);
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity deleteAuto(@PathVariable String id ) {
-        autoRepository.deleteById(id);
+        Optional<Auto> optionalAuto = autoRepository.findById(id);
+        if(optionalAuto.isPresent()) {
+            Auto deletingAuto = optionalAuto.get();
+            deletingAuto.setActive(false);
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

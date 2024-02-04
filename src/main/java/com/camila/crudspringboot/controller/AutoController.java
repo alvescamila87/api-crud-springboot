@@ -4,6 +4,7 @@ package com.camila.crudspringboot.controller;
 import com.camila.crudspringboot.domain.Auto;
 import com.camila.crudspringboot.dto.AutoDTO;
 import com.camila.crudspringboot.repository.AutoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class AutoController {
             updatingAuto.setPrice_in_cents(autoDTO.price_in_cents());
             return ResponseEntity.ok(updatingAuto);
         }
-        return ResponseEntity.notFound().build();
+        throw new EntityNotFoundException();
     }
 
     @DeleteMapping("/{id}")
@@ -56,6 +57,6 @@ public class AutoController {
             deletingAuto.setActive(false);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.noContent().build();
+        throw new EntityNotFoundException(); //não funcionou conforme o esperado
     }
 }
